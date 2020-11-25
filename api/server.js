@@ -49,7 +49,7 @@ module.exports = class StartServer {
 
   async initDataBase() {
     try {
-      await mongoose.connect(process.env.DATABASE_URL, mongooseOptions);
+      await mongoose.connect(process.env.URL, mongooseOptions);
       console.log("Database connection successful");
     }
     catch (error) {
