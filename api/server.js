@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
 // const productRouter = require("./routers/products.routes");
-// const usersRouter = require("./routers/users.routes");
+const usersRouter = require("./routes/users.routes");
 
 require("dotenv").config();
 
@@ -14,12 +14,12 @@ module.exports = class StartServer {
   async start() {
     this.initServer();
     this.initMiddlewarew();
-    // this.initUserRoutes();
+    this.initUserRoutes();
     // this.initProductRoutes();
-    // await this.initDataBase();
+    await this.initDataBase();
     this.startListening();
   }
-
+  
   initServer() {
     this.server = express();
   }
@@ -31,9 +31,9 @@ module.exports = class StartServer {
     this.server.use(cors({ origin: `http://localhost:${process.env.PORT}` }));
   }
 
-  initProductRoutes() {
-    this.server.use("/", productRouter);
-  }
+  // initProductRoutes() {
+  //   this.server.use("/", productRouter);
+  // }
 
   initUserRoutes() {
     this.server.use("/", usersRouter);
@@ -41,7 +41,7 @@ module.exports = class StartServer {
 
   async initDataBase() {
     await mongoose
-      .connect(process.env.URI, {
+      .connect(process.env.URL, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
