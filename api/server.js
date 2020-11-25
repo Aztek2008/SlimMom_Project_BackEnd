@@ -3,8 +3,9 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
+
 const productsRouter = require("./routes/products.routes");
-// const usersRouter = require("./routers/users.routes");
+const usersRouter = require("./routes/users.routes");
 
 const mongooseOptions = require("./utils/mongooseOptions");
 const errorMiddleware = require("./errors/errorMiddleware");
@@ -16,13 +17,13 @@ module.exports = class StartServer {
   async start() {
     this.initServer();
     this.initMiddlewarew();
-    // this.initUserRoutes();
+    this.initUserRoutes();
     this.initProductRoutes();
     await this.initDataBase();
     this.initErrorMiddleware();
     this.startListening();
   }
-
+  
   initServer() {
     this.server = express();
   }
