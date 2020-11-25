@@ -8,3 +8,10 @@ exports.UnauthorizedError = class UnauthorizedError extends (
     this.message = "User not authorized";
   }
 };
+
+exports.NotFoundError = class NotFoundError extends Error {
+  constructor(message = "Not found") {
+    super(message);
+    this.status = 404;
+  }
+}
