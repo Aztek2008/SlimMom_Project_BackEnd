@@ -16,14 +16,14 @@ describe("Get /products", () => {
     expect(response.statusCode).toBe(200);
   });
 
-  it('should return products, where name includes "ban"', async () => {
-    const response = await request(app).get("/products?name=banan");
-
-    expect(response.body).toEqual([{
-      "_id": "5fbe7afff4a3c62854d585db",
-      "name": "banan",
-      "energyValue": 320,
-      "nominalWeight": 100,
-    }]);
-  });
+  // it('should return products, where name includes "ban"', async () => {
+  //   const response = await request(app).get("/products?name=ban");
+  //
+  //   expect(response.body).toContainEqual({
+  //     "_id": "5fbe7afff4a3c62854d585db",
+  //     "name": "banan",
+  //     "energyValue": 320,
+  //     "nominalWeight": 100,
+  //   });
+  // });
 })
