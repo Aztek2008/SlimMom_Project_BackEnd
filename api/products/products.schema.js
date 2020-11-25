@@ -2,13 +2,19 @@ const mongoose = require("mongoose");
 const {Schema} = mongoose;
 
 const productSchema = new Schema({
-  name: {type: String, required: true},
-  energyValue: {type: Number, required: true,},
-  nominalWeight: {type: Number, default: 100},
+  categories: [{type: String}],
+  weight: {type: Number, default: 100},
+  title: {ru: String, ua: String},
+  calories: {type: Number},
+  groupBloodNotAllowed: {1: Boolean, 2: Boolean, 3: Boolean, 4: Boolean},
 });
 
+productSchema.index({type: 1}, {collation: {locale: "ua", strength: 2}});
+
 async function findByQuery(queryString) {
-  const queryOptions = queryString? {name: new RegExp(`${queryString.toLowerCase()}`)}: {};
+  const queryOptions = queryString
+    ? {$or: [{"title.ru": {"$regex": queryString}}, {"title.ua": {"$regex": queryString}}]}
+    : {};
   return this.find(queryOptions);
 }
 
