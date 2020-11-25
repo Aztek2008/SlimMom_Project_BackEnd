@@ -8,7 +8,8 @@ const productSchema = new Schema({
 });
 
 async function findByQuery(queryString) {
-  return this.find({name: new RegExp(`${queryString.toLowerCase()}`)});
+  const queryOptions = queryString? {name: new RegExp(`${queryString.toLowerCase()}`)}: {};
+  return this.find(queryOptions);
 }
 
 productSchema.statics.findByQuery = findByQuery;
