@@ -9,8 +9,6 @@ const productSchema = new Schema({
   groupBloodNotAllowed: {1: Boolean, 2: Boolean, 3: Boolean, 4: Boolean},
 });
 
-productSchema.index({type: 1}, {collation: {locale: "ua", strength: 2}});
-
 async function findByQuery(queryString) {
   const queryOptions = queryString
     ? {$or: [{"title.ru": {"$regex": queryString}}, {"title.ua": {"$regex": queryString}}]}
