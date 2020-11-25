@@ -1,20 +1,29 @@
-// const productsController = require("./products.controllers");
-// const Product = require("./products.schema");
-// const {mockRequest, mockResponse, mockNext} = require("../utils/interceptor");
-//
-// jest.mock(Product.findByQuery);
-//
-// describe("Should execute get products correctly", () => {
-//   test("should 200 and return objects", async () => {
-//     let req = mockRequest();
-//     req.query = "ban";
-//     let res = mockResponse();
-//     let next = mockNext();
-//
-//
-//     // await productsController.getProducts(req, res, next);
-//
-//
-//
-//   });
-// });
+const request = require("supertest");
+const StartServer = require("../server");
+
+const testServer = new StartServer();
+testServer.initSevices();
+
+const app = testServer.getServer();
+
+
+
+
+describe("Get /products", () => {
+  it('should return 200', async () => {
+    const response = await request(app).get("/products");
+    console.log(response.error)
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('should return products, where name includes "ban"', async () => {
+    const response = await request(app).get("/products?name=banan");
+
+    expect(response.body).toEqual([{
+      "_id": "5fbe7afff4a3c62854d585db",
+      "name": "banan",
+      "energyValue": 320,
+      "nominalWeight": 100,
+    }]);
+  });
+})

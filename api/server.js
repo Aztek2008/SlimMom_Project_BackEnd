@@ -15,15 +15,23 @@ module.exports = class StartServer {
     this.server = null;
   }
   async start() {
+    await this.initSevices();
+    this.startListening();
+  }
+
+  async initSevices() {
     this.initServer();
     this.initMiddlewarew();
     this.initUserRoutes();
     this.initProductRoutes();
     await this.initDataBase();
     this.initErrorMiddleware();
-    this.startListening();
   }
-  
+
+  getServer() {
+    return this.server;
+  }
+
   initServer() {
     this.server = express();
   }
