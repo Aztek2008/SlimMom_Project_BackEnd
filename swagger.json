@@ -1,0 +1,95 @@
+{
+  "swagger": "2.0","info":
+  {
+    "version": "1.0.0",
+      "title": "My User Project CRUD",
+    "description": "My User Project Application API",
+    "license": {"name": "MIT","url": "https://opensource.org/licenses/MIT"}
+  },
+  "host": "localhost:4000",
+  "basePath": "/",
+  "tags": [
+    {"name": "Products","description": "API for products in the system"}
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/products": {
+      "get": {
+        "tags": [
+          "Products"
+        ],
+        "summary": "Get products by query string, or all products if query does not exist",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "schema": {
+              "$ref": "#/definitions/Products"
+            }
+          }
+        },
+        "parameters": [{
+          "in": "query",
+          "name": "name",
+          "type": "string",
+          "description": "Name or partial name of product you need /products?name=омлет "
+        }]
+      }
+    }
+  },
+  "definitions": {
+    "Product": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "weight": {
+          "type": "number"
+        },
+        "title": {
+          "type": "object",
+          "properties": {
+            "ru": {
+              "type": "string"
+            },
+            "ua": {
+              "type": "string"
+            }
+          }
+        },
+        "calories": {
+          "type": "number"
+        },
+        "groupBloodNotAllowed": {
+          "type": "object",
+          "properties": {
+            "1": {
+              "type": "boolean"
+            },
+            "2": {
+              "type": "boolean"
+            },
+            "3": {
+              "type": "boolean"
+            },
+            "4": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "Products": {
+      "type": "array",
+      "$ref": "#/definitions/Product"
+    }
+  }
+}
