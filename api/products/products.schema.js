@@ -11,7 +11,10 @@ const productSchema = new Schema({
 
 async function findByQuery(queryString) {
   const queryOptions = queryString
-    ? {$or: [{"title.ru": {"$regex": queryString}}, {"title.ua": {"$regex": queryString}}]}
+    ? {$or: [
+        {"title.ru": {"$regex": queryString, "$options": "i"}},
+        {"title.ua": {"$regex": queryString, "$options": "i"}}
+      ]}
     : {};
   return this.find(queryOptions);
 }
