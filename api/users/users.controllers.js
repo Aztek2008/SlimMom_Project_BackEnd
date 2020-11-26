@@ -16,7 +16,7 @@ static async register(req, res, next) {
         const { name, login, password } = req.body;
         const userExist = await UserSchema.findOne({ login });
         if (userExist) {
-            return res.status(409).send("Such login is in use");
+            return res.status(409).json({ message: "Such login is in use"});
         }
         const newUser = await UserSchema.create({
             name,

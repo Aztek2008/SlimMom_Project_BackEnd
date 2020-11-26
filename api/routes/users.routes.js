@@ -4,7 +4,7 @@ const usersRouter = Router();
 
 //User Registration
 usersRouter.post(
-    "users/register",
+    "/register",
     UserController.validate,
     UserController.register,
 );
