@@ -8,3 +8,5 @@ usersRouter.post(
     UserController.validate,
     UserController.register,
 );
+
+module.exports = usersRouter;
