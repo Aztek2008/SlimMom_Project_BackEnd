@@ -3,6 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("../swagger.json");
 
 const productsRouter = require("./routes/products.routes");
 const usersRouter = require("./routes/users.routes");
@@ -24,6 +26,7 @@ module.exports = class StartServer {
     this.initMiddlewarew();
     this.initUserRoutes();
     this.initProductRoutes();
+    this.initSwaggerRoutes();
     await this.initDataBase();
     this.initErrorMiddleware();
   }
@@ -45,6 +48,10 @@ module.exports = class StartServer {
 
   initErrorMiddleware() {
     this.server.use(errorMiddleware);
+  }
+
+  initSwaggerRoutes() {
+    this.server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   }
 
   initProductRoutes() {
