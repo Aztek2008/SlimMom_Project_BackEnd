@@ -9,6 +9,6 @@ usersRouter.post("/register", UserController.validate, UserController.register);
 
 usersRouter.get("/verify/:verificationToken", UserController.verifyEmail);
 //User Logout
-usersRouter.patch("/logout", UserController.authorize, UserController.logout);
+// usersRouter.patch("/logout", UserController.authorize, UserController.logout);
 
 module.exports = usersRouter;
