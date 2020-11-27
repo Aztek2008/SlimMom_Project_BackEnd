@@ -7,9 +7,32 @@ const UserSchema = new Schema(
     login: { type: String, require: true },
     password: { type: String, require: true },
     token: String,
+    status: {
+      type: String,
+      required: true,
+      enum: ["Verified", "Created"],
+      default: "Created",
+    },
     verificationToken: { type: String, default: "", required: false },
   },
-  { versionKey: false },
+  { versionKey: false }
 );
+
+// Static methods
+
+UserSchema.statics.findByVerificationToken = findByVerificationToken;
+UserSchema.statics.verifyUser = verifyUser;
+
+async function findByVerificationToken(verificationToken) {
+  return this.findOne({ verificationToken });
+}
+
+async function verifyUser(userId) {
+  return this.findByIdAndUpdate(
+    userId,
+    { status: "Verified", verificationToken: null },
+    { new: true }
+  );
+}
 
 module.exports = mongoose.model("User", UserSchema);
