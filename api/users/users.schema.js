@@ -13,6 +13,7 @@ const UserSchema = new Schema(
       enum: ["Verified", "Created"],
       default: "Created",
     },
+    token: { type: String, required: false },
     verificationToken: { type: String, default: "", required: false },
   },
   { versionKey: false }
