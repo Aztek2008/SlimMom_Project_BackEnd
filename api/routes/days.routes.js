@@ -1,20 +1,19 @@
-const { Router } = require("express");
-const DaysController = require("../days/days.controllers");
-const daysRouter = Router();
-const UserController = require("../users/users.controllers")
+const express = require("express");
 
-//Add product to specific day
-daysRouter.post(
-    "/", 
-    UserController.authorize,
-    DaysController.validateProduct, 
-    DaysController.addProductToDay,
+const daysController = require("../days/days.controllers");
+const userController = require("../users/users.controllers");
+
+const daysRouter = express.Router();
+
+daysRouter.delete("/",
+  userController.authorize,
+  daysController.removeDayProducts,
 );
 
-//Get all products by specific day
-// daysRouter.get(
-//     "/", 
-//     DaysController.getAllDayProducts
-// );
+daysRouter.post("/",
+  daysController.validateProduct, 
+  userController.authorize,
+  daysController.addProductToDay,
+);
 
 module.exports = daysRouter;

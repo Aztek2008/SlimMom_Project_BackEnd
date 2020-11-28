@@ -1,5 +1,6 @@
 const request = require("supertest");
 const StartServer = require("../server");
+const mongoose = require("mongoose");
 
 const testServer = new StartServer();
 testServer.initSevices();
@@ -7,12 +8,16 @@ testServer.initSevices();
 const app = testServer.getServer();
 
 
-
-
 describe("Get /products", () => {
+  beforeAll(done => {
+    done()
+  });
+  afterAll(done => {
+    mongoose.connection.close()
+    done()
+  });
   it('should return 200', async () => {
     const response = await request(app).get("/products");
-    console.log(response.error)
     expect(response.statusCode).toBe(200);
   });
 
@@ -46,5 +51,4 @@ describe("Get /products", () => {
 
     expect(response.statusCode).toBe(404);
   });
-
-})
+});
