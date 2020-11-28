@@ -3,9 +3,10 @@ const Day = require("./days.schema");
 class DaysControllers {
   async removeDayProducts(req, res, next) {
     try {
-      const {productId, date} = req.body;
-
-      const productsDeleted = await Day.deleteMany({productId, date});
+      const {body: {productId, date}, user} = req;
+      // delete after login and authorize:
+      const userId = "5fc15c2c9c5ab43f18d7c429";
+      const productsDeleted = await Day.deleteMany({productId, date, userId, /*userId:user._id*/});
       if (!productsDeleted.deletedCount) {
         return res.status(204).json({message: "Nothing to delete"})
       }
@@ -15,11 +16,15 @@ class DaysControllers {
       next(error);
     }
   }
-
+  // мой вариант, так как для тестов чтоб что-то удалить, сначала нужно добавить
+  // Наташе заменить на свой вариант, плюс там мож какае-то валидация будет в middleware
+  // после реализации ЛОГИНА внести правки в код
   async addProductToDay(req, res, next) {
     try {
       const {user, body: {productId, weight, date}} = req;
-      const userId = "5fc0411fc3e6c64158f8a6e9"; // delete after login; 5d51694802b2373622ff552d, 5d51694802b2373622ff5534 for products
+      // products 5d51694802b2373622ff552d, 5d51694802b2373622ff5534
+      // userId: 5fbfd77707f62d0d7ce6bba1, 5fc15c2c9c5ab43f18d7c429
+      const userId = "5fbfd77707f62d0d7ce6bba1"; // delete after login and authorize:
       const day = new Day({
         productId,
         weight,
