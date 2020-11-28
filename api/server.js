@@ -8,6 +8,7 @@ const swaggerDocument = require("../swagger.json");
 
 const productsRouter = require("./routes/products.routes");
 const usersRouter = require("./routes/users.routes");
+const daysRouter = require("./routes/days.routes");
 
 const mongooseOptions = require("./utils/mongooseOptions");
 const errorMiddleware = require("./errors/errorMiddleware");
@@ -26,6 +27,7 @@ module.exports = class StartServer {
     this.initMiddlewarew();
     this.initUserRoutes();
     this.initProductRoutes();
+    this.initDayRoutes();
     this.initSwaggerRoutes();
     await this.initDataBase();
     this.initErrorMiddleware();
@@ -60,6 +62,10 @@ module.exports = class StartServer {
 
   initUserRoutes() {
     this.server.use("/users", usersRouter);
+  }
+
+  initDayRoutes() {
+    this.server.use("/days", daysRouter);
   }
 
   async initDataBase() {
