@@ -7,12 +7,7 @@ const bcryptjs = require("bcryptjs");
 
 const { UnauthorizedError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
-const { hashPassword } = require("./user.helpers");
-const {
-  emailBodyPartOne,
-  emailBodyPartTwo,
-  emailBodyPartThree,
-} = require("../utils/emailTemplate");
+const { hashPassword, updateToken } = require("./user.helpers");
 
 require("dotenv").config();
 
@@ -104,6 +99,7 @@ module.exports = class UserController {
       next(err);
     }
   }
+
   //middleware для валидации token
   static async authorize(req, res, next) {
     try {
@@ -139,35 +135,44 @@ module.exports = class UserController {
     }
   }
 
-  // Verify email
-  static async verifyEmail(req, res, next) {
+// Verify email
+static async verifyEmail(req, res, next) {
+  try {
+    const { verificationToken } = req.params;
+    const userToVerify = await UserSchema.findByVerificationToken(
+      verificationToken,
+    );
+
+    if (!userToVerify) {
+      throw new NotFoundError();
+    }
+
+    console.log(
+      'verificationToken :',
+      verificationToken,
+      'User to verify :',
+      userToVerify,
+    );
+
+    await UserSchema.verifyUser(userToVerify._id);
+
+   
+    return res
+      .status(200)
+      .sendFile(path.join(__dirname, '../public/index.html'));
+
+    // return res.status(200).send("Your accout is successfully verified");
+  } catch (err) {
+    next(err);
+  }
+}
+
+  // logout
+  static async logout(req, res, next) {
     try {
-      const { verificationToken } = req.params;
-      const userToVerify = await UserSchema.findByVerificationToken(
-        verificationToken
-      );
-
-      if (!userToVerify) {
-        throw new NotFoundError();
-      }
-
-      console.log(
-        "verificationToken :",
-        verificationToken,
-        "User to verify :",
-        userToVerify
-      );
-
-      await UserSchema.verifyUser(userToVerify._id);
-
-      //
-      return res
-        .status(200)
-        .sendFile(path.join(__dirname, "../public/index.html"));
-
-      //(path.join(__dirname + '/index.html'))
-
-      // return res.status(200).send("Your accout is successfully verified");
+      const user = req.user;
+      await updateToken(user._id, null);
+      return res.status(204).json();
     } catch (err) {
       next(err);
     }

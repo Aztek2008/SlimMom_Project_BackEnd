@@ -6,7 +6,6 @@ const UserSchema = new Schema(
     name: { type: String, require: true },
     login: { type: String, require: true },
     password: { type: String, require: true },
-    token: { type: String, required: false },
     status: {
       type: String,
       required: true,
