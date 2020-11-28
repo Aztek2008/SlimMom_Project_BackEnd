@@ -7,7 +7,7 @@ testServer.initSevices();
 
 const app = testServer.getServer();
 
-
+// тесты актуальны без авторизации
 describe("DELETE /days", () => {
   beforeAll(done => {
     done()
@@ -16,7 +16,18 @@ describe("DELETE /days", () => {
     mongoose.connection.close()
     done()
   });
+  let token;
   beforeEach (async () => {
+    const response = await request(app)
+      .put("/users/login")
+      .send({
+        login:"mikiteek@gmail.com",
+        password: "111111"
+      })
+      .set("Accept", "application/json")
+      .expect(200)
+    token = response.body.token;
+
     await request(app)
       .post("/days")
       .send({
@@ -25,7 +36,7 @@ describe("DELETE /days", () => {
         date: "2020-11-27"
       })
       .set("Accept", "application/json")
-      .expect("Content-Type", /json/)
+      .set("Authorization", "Bearer " + token)
       .expect(201)
   });
 
@@ -35,9 +46,9 @@ describe("DELETE /days", () => {
       .send({
         "productId":"5d51694802b2373622ff5534",
         "date": "2020-11-27",
-        "userId": "5fbfd77707f62d0d7ce6bba1"
       })
       .set("Accept", "application/json")
+      .set("Authorization", "Bearer " + token)
       .expect(200)
   });
 });
