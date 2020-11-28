@@ -1,17 +1,10 @@
 const Joi = require("joi");
 const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
-const sgMail = require("@sendgrid/mail");
-const path = require("path");
 
 const { UnauthorizedError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
-const { hashPassword } = require("./user.helpers");
-const {
-  emailBodyPartOne,
-  emailBodyPartTwo,
-  emailBodyPartThree,
-} = require("../utils/emailTemplate");
+const { hashPassword, updateToken } = require("./user.helpers");
 
 require("dotenv").config();
 
@@ -30,23 +23,6 @@ module.exports = class UserController {
         password: await hashPassword(password),
         verificationToken,
       });
-
-      // Send email
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-      const htmlLink = `<a href="http://localhost:${process.env.PORT}/users/verify/${verificationToken}"`;
-      const htmlEmailMsgBody = `${emailBodyPartOne}${newUser.name},${emailBodyPartTwo}${htmlLink}${emailBodyPartThree}`;
-
-      const msg = {
-        to: newUser.login,
-        from: process.env.EMAIL_SENDER,
-        subject: "Email varification",
-        text: "Please verify your email by the following link:",
-        html: htmlEmailMsgBody,
-      };
-
-      await sgMail.send(msg);
-
       return res.status(201).send({
         user: {
           name: newUser.name,
@@ -107,35 +83,12 @@ module.exports = class UserController {
     }
   }
 
-  // Verify email
-  static async verifyEmail(req, res, next) {
+  // logout
+  static async logout(req, res, next) {
     try {
-      const { verificationToken } = req.params;
-      const userToVerify = await UserSchema.findByVerificationToken(
-        verificationToken
-      );
-
-      if (!userToVerify) {
-        throw new NotFoundError();
-      }
-
-      console.log(
-        "verificationToken :",
-        verificationToken,
-        "User to verify :",
-        userToVerify
-      );
-
-      await UserSchema.verifyUser(userToVerify._id);
-
-      //
-      return res
-        .status(200)
-        .sendFile(path.join(__dirname, "../public/index.html"));
-
-      //(path.join(__dirname + '/index.html'))
-
-      // return res.status(200).send("Your accout is successfully verified");
+      const user = req.user;
+      await updateToken(user._id, null);
+      return res.status(204).json();
     } catch (err) {
       next(err);
     }

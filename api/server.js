@@ -53,11 +53,7 @@ module.exports = class StartServer {
   }
 
   initSwaggerRoutes() {
-    this.server.use(
-      "/api-docs",
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerDocument)
-    );
+    this.server.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   }
 
   initProductRoutes() {
@@ -80,7 +76,8 @@ module.exports = class StartServer {
     try {
       await mongoose.connect(process.env.URL, mongooseOptions);
       console.log("Database connection successful");
-    } catch (error) {
+    }
+    catch (error) {
       console.log(error);
       process.exit(1);
     }
