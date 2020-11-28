@@ -5,7 +5,7 @@ class DaysControllers {
     try {
       const {body: {productId, date}, user} = req;
       // delete after login and authorize:
-      const userId = "5fc15c2c9c5ab43f18d7c429";
+      const userId = "5fbfd77707f62d0d7ce6bba1";
       const productsDeleted = await Day.deleteMany({productId, date, userId, /*userId:user._id*/});
       if (!productsDeleted.deletedCount) {
         return res.status(204).json({message: "Nothing to delete"})

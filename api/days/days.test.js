@@ -16,7 +16,7 @@ describe("DELETE /days", () => {
     mongoose.connection.close()
     done()
   });
-  it ("should return 201",async () => {
+  beforeEach (async () => {
     await request(app)
       .post("/days")
       .send({
@@ -34,7 +34,8 @@ describe("DELETE /days", () => {
       .delete("/days")
       .send({
         "productId":"5d51694802b2373622ff5534",
-        "date": "2020-11-27"
+        "date": "2020-11-27",
+        "userId": "5fbfd77707f62d0d7ce6bba1"
       })
       .set("Accept", "application/json")
       .expect(200)

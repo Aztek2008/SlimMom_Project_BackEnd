@@ -5,7 +5,7 @@ const sgMail = require("@sendgrid/mail");
 const path = require("path");
 const bcryptjs = require("bcryptjs");
 
-const { UnauthorizedError } = require("../errors/ErrorMessage");
+const { UnauthorizedError, NotFoundError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
 const { hashPassword, updateToken } = require("./user.helpers");
 
