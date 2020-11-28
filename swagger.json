@@ -1,20 +1,140 @@
 {
-  "swagger": "2.0","info":
-  {
-    "version": "1.0.0",
-      "title": "My User Project CRUD",
-    "description": "My User Project Application API",
-    "license": {"name": "MIT","url": "https://opensource.org/licenses/MIT"}
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a simple example Slim Mom API project",
+    "version": "1.0.1",
+    "title": "Slim Mom API",
+    "contact": {
+      "email": "SlimMom@gmail.com"
+    },
+    "license": {
+      "name": "FS29 and FS31",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
   },
+  "schemes": [
+    "http"
+  ],
   "host": "localhost:4000",
   "basePath": "/",
-  "tags": [
-    {"name": "Products","description": "API for products in the system"}
-  ],
-  "schemes": ["http"],
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
   "paths": {
+    "/users/register/": {
+      "post": {
+        "summary": "Registration new user",
+        "description": "Registration new user",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "registration object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/Registration"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/registrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "Login User",
+        "description": "Login User",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "login object",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/loginParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/loginResponse",
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/loginResponseObject"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "patch": {
+        "summary": "Logout User",
+        "description": "Logout User",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "header",
+            "description": "user token",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "no content"
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
     "/products": {
       "get": {
         "tags": [
@@ -29,16 +149,142 @@
             }
           }
         },
-        "parameters": [{
-          "in": "query",
-          "name": "name",
-          "type": "string",
-          "description": "Name or partial name of product you need /products?name=омлет "
-        }]
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "type": "string",
+            "description": "Name or partial name of product you need /products?name=омлет "
+          }
+        ]
+      }
+    },
+    "/days": {
+      "post": {
+        "tags": [
+          "Days"
+        ],
+        "summary": "Add products to matched day",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Day"
+            },
+            "description": "Body for adding product"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Ok, product has created",
+            "schema": {
+              "$ref": "#/definitions/Day"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Days"
+        ],
+        "summary": "Remove products from matched day",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "productId": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Body for remove product from day"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Ok, product has deleted"
+          },
+          "204": {
+            "description": "Nothing to delete"
+          }
+        }
       }
     }
   },
+
   "definitions": {
+    "registrationResponse": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        }
+      }
+    },
+    "Registration": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "InvalidResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      }
+
+    },
+    "loginParams": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "loginResponse": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "loginResponseObject": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "Product": {
       "properties": {
         "_id": {
@@ -90,6 +336,23 @@
     "Products": {
       "type": "array",
       "$ref": "#/definitions/Product"
+    },
+    "Day": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "weight": {
+          "type": "number"
+        },
+        "date": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
     }
   }
 }
