@@ -11,7 +11,7 @@ daysRouter.delete("/",
 );
 
 daysRouter.post("/",
-  // add middleware for validation from Natalia
+  daysController.validateProduct, 
   userController.authorize,
   daysController.addProductToDay,
 );

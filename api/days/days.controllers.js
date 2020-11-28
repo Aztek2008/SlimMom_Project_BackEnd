@@ -1,3 +1,4 @@
+const Joi = require("joi");
 const Day = require("./days.schema");
 
 class DaysControllers {
@@ -33,6 +34,19 @@ class DaysControllers {
     catch (error) {
       next(error);
     }
+  }
+
+  async validateProduct (req, res, next) {
+    const validSchema = Joi.object({
+      productId: Joi.string().required(),
+      weight: Joi.string().required(),
+      date: Joi.date().required(),
+    });
+    const validResult = validSchema.validate(req.body);
+    if (validResult.error) {
+      return res.status(400).send(validResult.error.details);
+    }
+    next();
   }
 }
 
