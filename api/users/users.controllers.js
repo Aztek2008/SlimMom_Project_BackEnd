@@ -5,7 +5,7 @@ const sgMail = require("@sendgrid/mail");
 const path = require("path");
 const bcryptjs = require("bcryptjs");
 
-const { UnauthorizedError } = require("../errors/ErrorMessage");
+const { UnauthorizedError, NotFoundError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
 const { hashPassword, updateToken } = require("./user.helpers");
 
@@ -27,21 +27,21 @@ module.exports = class UserController {
         verificationToken,
       });
 
-      // Send email
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-      const htmlLink = `<a href="http://localhost:${process.env.PORT}/users/verify/${verificationToken}"`;
-      const htmlEmailMsgBody = `${emailBodyPartOne}${newUser.name},${emailBodyPartTwo}${htmlLink}${emailBodyPartThree}`;
-
-      const msg = {
-        to: newUser.login,
-        from: process.env.EMAIL_SENDER,
-        subject: "Email varification",
-        text: "Please verify your email by the following link:",
-        html: htmlEmailMsgBody,
-      };
-
-      await sgMail.send(msg);
+      // // Send email
+      // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+      //
+      // const htmlLink = `<a href="http://localhost:${process.env.PORT}/users/verify/${verificationToken}"`;
+      // const htmlEmailMsgBody = `${emailBodyPartOne}${newUser.name},${emailBodyPartTwo}${htmlLink}${emailBodyPartThree}`;
+      //
+      // const msg = {
+      //   to: newUser.login,
+      //   from: process.env.EMAIL_SENDER,
+      //   subject: "Email varification",
+      //   text: "Please verify your email by the following link:",
+      //   html: htmlEmailMsgBody,
+      // };
+      //
+      // await sgMail.send(msg);
 
       return res.status(201).send({
         user: {
@@ -74,7 +74,7 @@ module.exports = class UserController {
       const { login, password } = req.body;
 
       const user = await UserSchema.findUserByLogin(login);
-      if (!user || user.status !== "Verified") {
+      if (!user /*|| user.status !== "Verified"*/) {
         throw new NotFoundError("Email or password is wrong");
       }
 
