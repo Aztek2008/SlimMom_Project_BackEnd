@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const {Schema} = mongoose;
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const productSchema = new Schema({
   categories: [{type: String}],
@@ -9,14 +10,16 @@ const productSchema = new Schema({
   groupBloodNotAllowed: {1: Boolean, 2: Boolean, 3: Boolean, 4: Boolean},
 });
 
-async function findByQuery(queryString) {
+productSchema.plugin(mongoosePaginate);
+
+async function findByQuery(queryString, page, limit) {
   const queryOptions = queryString
     ? {$or: [
         {"title.ru": {"$regex": queryString, "$options": "i"}},
         {"title.ua": {"$regex": queryString, "$options": "i"}}
       ]}
     : {};
-  return this.find(queryOptions);
+  return this.paginate(queryOptions, {page, limit});
 }
 
 productSchema.statics.findByQuery = findByQuery;
