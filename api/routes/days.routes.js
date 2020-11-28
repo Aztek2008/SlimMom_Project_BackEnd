@@ -1,6 +1,6 @@
 const express = require("express");
 
-const daysController = require("./days.controllers");
+const daysController = require("../days/days.controllers");
 const userController = require("../users/users.controllers");
 
 const daysRouter = express.Router();

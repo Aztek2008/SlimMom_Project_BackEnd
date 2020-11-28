@@ -6,9 +6,9 @@ const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("../swagger.json");
 
-const productsRouter = require("./products/products.routes");
+const productsRouter = require("./routes/products.routes");
 const usersRouter = require("./routes/users.routes");
-const daysRouter = require("./days/days.routes");
+const daysRouter = require("./routes/days.routes");
 
 const mongooseOptions = require("./utils/mongooseOptions");
 const errorMiddleware = require("./errors/errorMiddleware");

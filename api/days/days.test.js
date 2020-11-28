@@ -19,7 +19,7 @@ describe("DELETE /days", () => {
   let token;
   beforeEach (async () => {
     const response = await request(app)
-      .put("/users/login")
+      .post("/users/login")
       .send({
         login:"mikiteek@gmail.com",
         password: "111111"

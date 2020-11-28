@@ -9,7 +9,7 @@ usersRouter.post("/register", UserController.validate, UserController.register);
 usersRouter.get("/verify/:verificationToken", UserController.verifyEmail);
 
 // Login
-usersRouter.put(
+usersRouter.post(
   "/login",
   UserController.validateUserLoginAndPassword,
   UserController.login
