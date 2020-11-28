@@ -3,6 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 const jwt = require("jsonwebtoken");
 const sgMail = require("@sendgrid/mail");
 const path = require("path");
+const bcryptjs = require("bcryptjs");
 
 const { UnauthorizedError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
@@ -72,6 +73,37 @@ module.exports = class UserController {
     next();
   }
 
+  // Login
+  static async login(req, res, next) {
+    try {
+      const { login, password } = req.body;
+
+      const user = await UserSchema.findUserByLogin(login);
+      if (!user || user.status !== "Verified") {
+        throw new NotFoundError("Email or password is wrong");
+      }
+
+      const isPasswordValid = await bcryptjs.compare(password, user.password);
+      if (!isPasswordValid) {
+        throw new NotFoundError("Email or password is wrong");
+      }
+
+      const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: 2 * 24 * 60 * 60, // two days
+      });
+      await UserSchema.updateToken(user._id, token);
+
+      return res.status(200).json({
+        token,
+        user: {
+          login: user.login,
+          name: user.name,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
   //middleware для валидации token
   static async authorize(req, res, next) {
     try {
@@ -139,5 +171,17 @@ module.exports = class UserController {
     } catch (err) {
       next(err);
     }
+  }
+
+  static validateUserLoginAndPassword(req, res, next) {
+    const validationSchema = Joi.object({
+      login: Joi.string().required(),
+      password: Joi.string().required(),
+    });
+    const validationResult = validationSchema.validate(req.body);
+    if (validationResult.error) {
+      return res.status(400).send(validationResult.error.details);
+    }
+    next();
   }
 };

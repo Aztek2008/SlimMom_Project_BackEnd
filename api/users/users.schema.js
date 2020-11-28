@@ -6,7 +6,7 @@ const UserSchema = new Schema(
     name: { type: String, require: true },
     login: { type: String, require: true },
     password: { type: String, require: true },
-    token: String,
+    token: { type: String, required: false },
     status: {
       type: String,
       required: true,
@@ -23,6 +23,8 @@ const UserSchema = new Schema(
 
 UserSchema.statics.findByVerificationToken = findByVerificationToken;
 UserSchema.statics.verifyUser = verifyUser;
+UserSchema.statics.findUserByLogin = findUserByLogin;
+UserSchema.statics.updateToken = updateToken;
 
 async function findByVerificationToken(verificationToken) {
   return this.findOne({ verificationToken });
@@ -34,6 +36,16 @@ async function verifyUser(userId) {
     { status: "Verified", verificationToken: null },
     { new: true }
   );
+}
+
+async function findUserByLogin(login) {
+  return this.findOne({ login });
+}
+
+async function updateToken(id, newToken) {
+  return this.findByIdAndUpdate(id, {
+    token: newToken,
+  });
 }
 
 module.exports = mongoose.model("User", UserSchema);

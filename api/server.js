@@ -66,10 +66,6 @@ module.exports = class StartServer {
     this.server.use("/users", usersRouter);
   }
 
-  // initAuthRoutes() {
-  //   this.server.use("/auth", authRouter);
-  // }
-
   async initDataBase() {
     try {
       await mongoose.connect(process.env.URL, mongooseOptions);
