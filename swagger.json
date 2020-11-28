@@ -36,6 +36,61 @@
           "description": "Name or partial name of product you need /products?name=омлет "
         }]
       }
+    },
+    "/days": {
+      "post": {
+        "tags": [
+          "Days"
+        ],
+        "summary": "Add products to matched day",
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/Day"
+          },
+          "description": "Body for adding product"
+        }],
+        "responses": {
+          "201": {
+            "description": "Ok, product has created",
+            "schema": {
+              "$ref": "#/definitions/Day"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Days"
+        ],
+        "summary": "Remove products from matched day",
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "required": true,
+          "schema": {
+            "properties": {
+              "productId": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string"
+              }
+            }
+          },
+          "description": "Body for remove product from day"
+        }],
+        "responses": {
+          "201": {
+            "description": "Ok, product has deleted"
+          },
+          "204": {
+            "description": "Nothing to delete"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -90,6 +145,23 @@
     "Products": {
       "type": "array",
       "$ref": "#/definitions/Product"
+    },
+    "Day": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "weight": {
+          "type": "number"
+        },
+        "date": {
+          "type": "string"
+        },
+        "userId": {
+          "type": "string"
+        }
+      }
     }
   }
 }
