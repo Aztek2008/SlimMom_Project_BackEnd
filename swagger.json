@@ -155,6 +155,20 @@
             "name": "name",
             "type": "string",
             "description": "Name or partial name of product you need /products?name=омлет "
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "minimum": 1,
+            "default": 1,
+            "description": "Number of page"
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "minimum": 2,
+            "default": 10,
+            "description": "Limit of objects per page"
           }
         ]
       }
@@ -334,8 +348,43 @@
       }
     },
     "Products": {
-      "type": "array",
-      "$ref": "#/definitions/Product"
+      "type": "object",
+      "properties": {
+        "docs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        },
+        "totalDocs": {
+          "type": "number"
+        },
+        "limit": {
+          "type": "number"
+        },
+        "totalPages": {
+          "type": "number"
+        },
+        "page": {
+          "type": "number"
+        },
+        "paginationCounter": {
+          "type": "number"
+        },
+        "hasPrevPage": {
+          "type": "boolean"
+        },
+        "hasNextPage": {
+          "type": "boolean"
+        },
+        "prevPage": {
+          "type": "number"
+        },
+        "nextPage": {
+          "type": "number"
+        }
+
+      }
     },
     "Day": {
       "properties": {

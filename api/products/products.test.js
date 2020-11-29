@@ -8,33 +8,6 @@ testServer.initSevices();
 const app = testServer.getServer();
 
 describe("Get /products", () => {
-  // const productObject = {
-  //   title: expect.any(String),
-  //   groupBloodNotAllowed: expect.objectContaining({
-  //     1: expect.any(Boolean),
-  //     2: expect.any(Boolean),
-  //     3: expect.any(Boolean),
-  //     4: expect.any(Boolean),
-  //   }),
-  //   categories: expect.arrayContaining(expect.any(String)),
-  //   weight: expect.any(Number),
-  //   _id: expect.any(String),
-  //   calories: expect.any(Number),
-  //   __v: expect.any(Number),
-  // }
-  //
-  // const responceObject = {
-  //   docs: expect.arrayContaining(expect.objectContaining(productObject)),
-  //   totalDocs: expect.any(Number),
-  //   limit: expect.any(Number),
-  //   totalPages: expect.any(Number),
-  //   page: expect.any(Number),
-  //   pagingCounter: expect.any(Number),
-  //   hasPrevPage: expect.any(Boolean),
-  //   hasNextPage: expect.any(Boolean),
-  //   prevPage: expect.any(Number | null),
-  //   nextPage: expect.any(Number | null),
-  // }
   beforeAll(done => {
     done()
   });
@@ -52,7 +25,16 @@ describe("Get /products", () => {
     const response = await request(app).get(uri);
 
     expect(response.statusCode).toBe(200);
-    expect(response.body).toEqual(expect.any(Object))
+    expect(response.body).toHaveProperty("docs");
+    expect(response.body).toHaveProperty("totalDocs");
+    expect(response.body).toHaveProperty("limit");
+    expect(response.body).toHaveProperty("totalPages");
+    expect(response.body).toHaveProperty("page");
+    expect(response.body).toHaveProperty("pagingCounter");
+    expect(response.body).toHaveProperty("hasPrevPage");
+    expect(response.body).toHaveProperty("hasNextPage");
+    expect(response.body).toHaveProperty("prevPage");
+    expect(response.body).toHaveProperty("nextPage");
   });
   it('should return 404', async () => {
     const uri = encodeURI("/products?name=абра-кадабра");
