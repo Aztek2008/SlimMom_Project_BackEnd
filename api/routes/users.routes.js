@@ -16,6 +16,6 @@ usersRouter.post(
 );
 
 //User Logout
-usersRouter.patch("/logout", UserController.authorize, UserController.logout);
+usersRouter.get("/logout", UserController.authorize, UserController.logout);
 
 module.exports = usersRouter;
