@@ -20,11 +20,15 @@ module.exports = class UserController {
       if (userExist) {
         return res.status(409).json({ message: "Such login is in use" });
       }
+      const token = await jwt.sign({}, process.env.JWT_SECRET, {
+        expiresIn: 2 * 24 * 60 * 60, // two days
+      });
       const newUser = await UserSchema.create({
         name,
         login,
         password: await hashPassword(password),
         verificationToken,
+        token,
       });
 
       // // Send email
@@ -44,7 +48,9 @@ module.exports = class UserController {
       // await sgMail.send(msg);
 
       return res.status(201).send({
+        token,
         user: {
+          _id: newUser._id,
           name: newUser.name,
           login: newUser.login,
         },
