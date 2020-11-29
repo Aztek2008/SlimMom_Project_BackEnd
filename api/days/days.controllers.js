@@ -39,7 +39,7 @@ class DaysControllers {
   async validateProduct (req, res, next) {
     const validSchema = Joi.object({
       productId: Joi.string().required(),
-      weight: Joi.string().required(),
+      weight: Joi.number().required(),
       date: Joi.date().required(),
     });
     const validResult = validSchema.validate(req.body);
