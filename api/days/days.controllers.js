@@ -1,5 +1,6 @@
 const Joi = require("joi");
 const Day = require("./days.schema");
+const {NotFoundError} = require("../errors/ErrorMessage");
 
 class DaysControllers {
   async removeDayProducts(req, res, next) {
@@ -47,6 +48,21 @@ class DaysControllers {
       return res.status(400).send(validResult.error.details);
     }
     next();
+  }
+
+  async getDayInfo (req, res, next) {
+    try {
+      const {user, body: {date}} = req;
+      const dayInfoReq = await Day.getProductsInDay(date, user);
+      if (!dayInfoReq.length) {
+        throw new NotFoundError();
+      }
+
+      return res.json(dayInfoReq);
+    }
+    catch (error) {
+      next(error);
+    }
   }
 }
 
