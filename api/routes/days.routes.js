@@ -16,4 +16,9 @@ daysRouter.post("/",
   daysController.addProductToDay,
 );
 
+daysRouter.get("/",
+  userController.authorize,
+  daysController.getDayInfo
+);
+
 module.exports = daysRouter;
