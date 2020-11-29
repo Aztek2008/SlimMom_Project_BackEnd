@@ -20,6 +20,9 @@
   "paths": {
     "/users/register/": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "summary": "Registration new user",
         "description": "Registration new user",
         "produces": [
@@ -46,6 +49,9 @@
             "schema": {
               "type": "object",
               "properties": {
+                "token": {
+                  "type": "string"
+                },
                 "user": {
                   "type": "object",
                   "$ref": "#/definitions/registrationResponse"
@@ -64,6 +70,9 @@
     },
     "/users/login": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "summary": "Login User",
         "description": "Login User",
         "produces": [
@@ -106,6 +115,9 @@
     },
     "/users/logout": {
       "patch": {
+        "tags": [
+          "Users"
+        ],
         "summary": "Logout User",
         "description": "Logout User",
         "produces": [
@@ -114,11 +126,12 @@
         "parameters": [
           {
             "in": "header",
-            "name": "header",
-            "description": "user token",
+            "name": "Authorization",
+            "description": "User token",
             "required": true,
             "schema": {
-              "type": "object"
+              "type": "string",
+              "example": "String"
             }
           }
         ],
@@ -269,6 +282,9 @@
         },
         "login": {
           "type": "string"
+        },
+        "_id": {
+          "type": "string"
         }
       }
     },
@@ -321,6 +337,9 @@
           "type": "string"
         },
         "name": {
+          "type": "string"
+        },
+        "_id": {
           "type": "string"
         }
       }
