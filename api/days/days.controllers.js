@@ -56,7 +56,7 @@ class DaysControllers {
         throw new NotFoundError();
       }
 
-      return res.json(dayInfoReq);
+      return res.status(200).json(dayInfoReq);
     }
     catch (error) {
       next(error);
