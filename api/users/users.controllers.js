@@ -81,12 +81,14 @@ module.exports = class UserController {
 
       const user = await UserSchema.findUserByLogin(login);
       if (!user /*|| user.status !== "Verified"*/) {
-        throw new NotFoundError("Email or password is wrong");
+        return res.status(404).json({ message: "Login or password is wrong" });
+        // throw new NotFoundError("Email or password is wrong");
       }
 
       const isPasswordValid = await bcryptjs.compare(password, user.password);
       if (!isPasswordValid) {
-        throw new NotFoundError("Email or password is wrong");
+        return res.status(404).json({ message: "Login or password is wrong" });
+        // throw new NotFoundError("Email or password is wrong");
       }
 
       const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
@@ -99,6 +101,7 @@ module.exports = class UserController {
         user: {
           login: user.login,
           name: user.name,
+          _id: user._id,
         },
       });
     } catch (err) {
