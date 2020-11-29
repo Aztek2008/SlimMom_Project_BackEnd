@@ -8,7 +8,7 @@ testServer.initSevices();
 const app = testServer.getServer();
 
 // тесты актуальны без авторизации
-describe("DELETE /days", () => {
+describe("Correct work for endpoint /days", () => {
   beforeAll(done => {
     done()
   });
@@ -16,39 +16,59 @@ describe("DELETE /days", () => {
     mongoose.connection.close()
     done()
   });
-  let token;
-  beforeEach (async () => {
-    const response = await request(app)
-      .post("/users/login")
-      .send({
-        login:"mikiteek@gmail.com",
-        password: "111111"
-      })
-      .set("Accept", "application/json")
-      .expect(200)
-    token = response.body.token;
+  let token, dayId;
 
-    await request(app)
-      .post("/days")
-      .send({
-        productId:"5d51694802b2373622ff5534",
-        weight: 550,
-        date: "2020-11-27"
-      })
-      .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + token)
-      .expect(201)
+  describe("POST /days", () => {
+    beforeEach(async () => {
+      const responseLogin = await request(app)
+        .post("/users/login")
+        .send({
+          login:"mikiteek@gmail.com",
+          password: "111111"
+        })
+        .set("Accept", "application/json")
+        .expect(200)
+      token = responseLogin.body.token;
+    });
+
+    it ('should return 201', async () => {
+      const responseCreate = await request(app)
+        .post("/days")
+        .send({
+          productId:"5d51694802b2373622ff5534",
+          weight: 550,
+          date: "2020-11-27"
+        })
+        .set("Accept", "application/json")
+        .set("Authorization", "Bearer " + token)
+        .expect(201)
+      dayId = responseCreate.body;
+    });
+
   });
 
-  it ('should return 200', async () => {
-    await request(app)
-      .delete("/days")
-      .send({
-        "productId":"5d51694802b2373622ff5534",
-        "date": "2020-11-27",
-      })
-      .set("Accept", "application/json")
-      .set("Authorization", "Bearer " + token)
-      .expect(200)
-  });
+  describe("DELETE /days", () => {
+    beforeEach (async () => {
+      const responseLogin = await request(app)
+        .post("/users/login")
+        .send({
+          login:"mikiteek@gmail.com",
+          password: "111111"
+        })
+        .set("Accept", "application/json")
+        .expect(200)
+      token = responseLogin.body.token;
+    });
+
+    it ('should return 200', async () => {
+      await request(app)
+        .delete("/days")
+        .send({
+          dayId
+        })
+        .set("Accept", "application/json")
+        .set("Authorization", "Bearer " + token)
+        .expect(200)
+    });
+  })
 });

@@ -5,9 +5,9 @@ const {NotFoundError} = require("../errors/ErrorMessage");
 class DaysControllers {
   async removeDayProducts(req, res, next) {
     try {
-      const {body: {productId, date}, user} = req;
-      const productsDeleted = await Day.deleteMany({productId, date, userId:user._id});
-      if (!productsDeleted.deletedCount) {
+      const {body: {dayId}} = req;
+      const productsDeleted = await Day.findByIdAndDelete(dayId, {projection :{_id: true}});
+      if (!productsDeleted) {
         return res.status(204).json({message: "Nothing to delete"})
       }
       return res.status(200).json({message: "Product has deleted"});
@@ -16,9 +16,7 @@ class DaysControllers {
       next(error);
     }
   }
-  // мой вариант, так как для тестов чтоб что-то удалить, сначала нужно добавить
-  // Наташе заменить на свой вариант, плюс там мож какае-то валидация будет в middleware
-  // после реализации ЛОГИНА внести правки в код
+
   async addProductToDay(req, res, next) {
     try {
       const {user, body: {productId, weight, date}} = req;

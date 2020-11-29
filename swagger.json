@@ -211,15 +211,12 @@
             "required": true,
             "schema": {
               "properties": {
-                "productId": {
-                  "type": "string"
-                },
-                "date": {
+                "dayId": {
                   "type": "string"
                 }
               }
             },
-            "description": "Body for remove product from day"
+            "description": "Remove product from Day by Day's id"
           }
         ],
         "responses": {
