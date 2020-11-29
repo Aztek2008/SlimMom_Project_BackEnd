@@ -224,15 +224,12 @@
             "required": true,
             "schema": {
               "properties": {
-                "productId": {
-                  "type": "string"
-                },
-                "date": {
+                "dayId": {
                   "type": "string"
                 }
               }
             },
-            "description": "Body for remove product from day"
+            "description": "Remove product from Day by Day's id"
           }
         ],
         "responses": {
@@ -241,6 +238,35 @@
           },
           "204": {
             "description": "Nothing to delete"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Days"
+        ],
+        "summary": "Get all info per matched day",
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "date": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "Get all info per matched day"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns array of objects below",
+            "schema": {
+              "$ref": "#/definitions/dayDetailsResponse"
+            }
           }
         }
       }
@@ -420,6 +446,58 @@
         "userId": {
           "type": "string"
         }
+      }
+    },
+    "productShortInfo": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "weight": {
+          "type": "number"
+        },
+        "title": {
+          "type": "object",
+          "properties": {
+            "ru": {
+              "type": "string"
+            },
+            "ua": {
+              "type": "string"
+            }
+          }
+        },
+        "calories": {
+          "type": "number"
+        }
+      }
+    },
+    "dayInfoItem": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "date": {
+          "type": "string"
+        },
+        "product": {
+          "type": "object",
+          "$ref": "#definitions/productShortInfo"
+        },
+        "totalWeight": {
+          "type": "number"
+        },
+        "totalCalories": {
+          "type": "number"
+        }
+      }
+    },
+    "dayDetailsResponse": {
+      "type": "array",
+      "items": {
+        "$ref": "#definitions/dayInfoItem"
       }
     }
   }
