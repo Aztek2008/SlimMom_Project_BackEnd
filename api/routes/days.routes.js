@@ -16,7 +16,7 @@ daysRouter.post("/",
   daysController.addProductToDay,
 );
 
-daysRouter.get("/",
+daysRouter.get("/:date",
   userController.authorize,
   daysController.getDayInfo
 );

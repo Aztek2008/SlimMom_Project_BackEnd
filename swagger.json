@@ -186,6 +186,40 @@
         ]
       }
     },
+    "/days/{date}": {
+      "get": {
+        "tags": [
+          "Days"
+        ],
+        "summary": "Get all info per matched day",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "date",
+            "type": "string",
+            "description": "Date of you need get User info "
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "User token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "String"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns array of objects below",
+            "schema": {
+              "$ref": "#/definitions/dayDetailsResponse"
+            }
+          }
+        }
+      }
+    },
     "/days": {
       "post": {
         "tags": [
@@ -193,6 +227,16 @@
         ],
         "summary": "Add products to matched day",
         "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "User token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "String"
+            }
+          },
           {
             "in": "body",
             "name": "body",
@@ -219,6 +263,16 @@
         "summary": "Remove products from matched day",
         "parameters": [
           {
+            "in": "header",
+            "name": "Authorization",
+            "description": "User token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "String"
+            }
+          },
+          {
             "in": "body",
             "name": "body",
             "required": true,
@@ -238,35 +292,6 @@
           },
           "204": {
             "description": "Nothing to delete"
-          }
-        }
-      },
-      "get": {
-        "tags": [
-          "Days"
-        ],
-        "summary": "Get all info per matched day",
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "required": true,
-            "schema": {
-              "properties": {
-                "date": {
-                  "type": "string"
-                }
-              }
-            },
-            "description": "Get all info per matched day"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Returns array of objects below",
-            "schema": {
-              "$ref": "#/definitions/dayDetailsResponse"
-            }
           }
         }
       }

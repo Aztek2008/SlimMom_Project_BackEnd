@@ -50,7 +50,8 @@ class DaysControllers {
 
   async getDayInfo (req, res, next) {
     try {
-      const {user, body: {date}} = req;
+      const { user } = req;
+      const { date } = req.params;
       const dayInfoReq = await Day.getProductsInDay(date, user);
       if (!dayInfoReq.length) {
         throw new NotFoundError();
