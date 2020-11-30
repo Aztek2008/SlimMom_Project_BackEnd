@@ -198,7 +198,7 @@
             "name": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Day"
+              "$ref": "#/definitions/addDayRequest"
             },
             "description": "Body for adding product"
           }
@@ -437,6 +437,9 @@
           "type": "string",
           "uniqueItems": true
         },
+        "productId": {
+          "type": "string"
+        },
         "weight": {
           "type": "number"
         },
@@ -444,6 +447,19 @@
           "type": "string"
         },
         "userId": {
+          "type": "string"
+        }
+      }
+    },
+    "addDayRequest": {
+      "properties": {
+        "productId": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "date": {
           "type": "string"
         }
       }
