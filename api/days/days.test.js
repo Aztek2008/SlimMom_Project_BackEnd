@@ -7,7 +7,6 @@ testServer.initSevices();
 
 const app = testServer.getServer();
 
-// тесты актуальны без авторизации
 describe("Correct work for endpoint /days", () => {
   beforeAll(done => {
     done()
