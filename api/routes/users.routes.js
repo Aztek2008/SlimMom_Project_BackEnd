@@ -6,7 +6,10 @@ const usersRouter = Router();
 usersRouter.post("/register", UserController.validate, UserController.register);
 
 // Email verification
-usersRouter.get("/verify/:verificationToken", UserController.verifyEmail);
+// usersRouter.get("/verify/:verificationToken", UserController.verifyEmail);
+
+// Get User info
+usersRouter.get("/getuser", UserController.authorize, UserController.getUser);
 
 // Login
 usersRouter.post(

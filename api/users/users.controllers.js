@@ -20,15 +20,12 @@ module.exports = class UserController {
       if (userExist) {
         return res.status(409).json({ message: "Such login is in use" });
       }
-      const token = await jwt.sign({}, process.env.JWT_SECRET, {
-        expiresIn: 2 * 24 * 60 * 60, // two days
-      });
+
       const newUser = await UserSchema.create({
         name,
         login,
         password: await hashPassword(password),
         verificationToken,
-        token,
       });
 
       // // Send email
@@ -48,7 +45,6 @@ module.exports = class UserController {
       // await sgMail.send(msg);
 
       return res.status(201).send({
-        token,
         user: {
           _id: newUser._id,
           name: newUser.name,
@@ -56,7 +52,6 @@ module.exports = class UserController {
         },
       });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
@@ -156,13 +151,6 @@ static async verifyEmail(req, res, next) {
       throw new NotFoundError();
     }
 
-    console.log(
-      'verificationToken :',
-      verificationToken,
-      'User to verify :',
-      userToVerify,
-    );
-
     await UserSchema.verifyUser(userToVerify._id);
 
    
@@ -175,6 +163,22 @@ static async verifyEmail(req, res, next) {
     next(err);
   }
 }
+
+  // Get User Info
+  static async getUser(req, res, next) {
+    try {
+      const user = req.user;
+      return res.status(200).json({
+        user: {
+          login: user.login,
+          name: user.name,
+          _id: user._id,
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }  
 
   // logout
   static async logout(req, res, next) {

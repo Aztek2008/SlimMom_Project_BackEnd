@@ -49,9 +49,6 @@
             "schema": {
               "type": "object",
               "properties": {
-                "token": {
-                  "type": "string"
-                },
                 "user": {
                   "type": "object",
                   "$ref": "#/definitions/registrationResponse"
@@ -60,6 +57,49 @@
             }
           },
           "400": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/getuser": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get User Information by token",
+        "description": "Get User Information by token",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "User token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "String"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "properties": {
+                "user": {
+                  "type": "object",
+                  "$ref": "#/definitions/loginResponseObject"
+                }
+              }
+            }
+          },
+          "401": {
             "description": "Invalid status value",
             "schema": {
               "$ref": "#/definitions/InvalidResponse"
