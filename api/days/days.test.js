@@ -111,10 +111,7 @@ describe("Correct work for endpoint /days", () => {
 
     it ('should return 200', async () => {
       await request(app)
-        .get("/days")
-        .send({
-          date
-        })
+        .get(`/days/${date}`)
         .set("Accept", "application/json")
         .set("Authorization", "Bearer " + token)
         .expect(200)
