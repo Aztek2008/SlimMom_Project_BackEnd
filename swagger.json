@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "description": "This is a simple example Slim Mom API project",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "title": "Slim Mom API",
     "contact": {
       "email": "SlimMom@gmail.com"
@@ -18,6 +18,45 @@
   "host": "localhost:4000",
   "basePath": "/",
   "paths": {
+"/users/getuser": {
+  "get": {
+    "tags": [
+      "Users"
+    ],
+    "summary": "Get User Information by token",
+    "description": "Get User Information by token",
+    "produces": [
+      "application/json"
+    ],
+    "parameters": [
+      {
+        "in": "header",
+        "name": "Authorization",
+        "description": "User token",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "String"
+        }
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "successful operation",
+        "schema": {
+          "type": "object",
+          "$ref": "#/definitions/getUserResponse"
+        }
+      },
+      "401": {
+        "description": "Invalid status value",
+        "schema": {
+          "$ref": "#/definitions/InvalidResponse"
+        }
+      }
+    }
+  }
+},
     "/users/register/": {
       "post": {
         "tags": [
@@ -57,49 +96,6 @@
             }
           },
           "400": {
-            "description": "Invalid status value",
-            "schema": {
-              "$ref": "#/definitions/InvalidResponse"
-            }
-          }
-        }
-      }
-    },
-    "/users/getuser": {
-      "get": {
-        "tags": [
-          "Users"
-        ],
-        "summary": "Get User Information by token",
-        "description": "Get User Information by token",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "header",
-            "name": "Authorization",
-            "description": "User token",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "String"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "properties": {
-                "user": {
-                  "type": "object",
-                  "$ref": "#/definitions/loginResponseObject"
-                }
-              }
-            }
-          },
-          "401": {
             "description": "Invalid status value",
             "schema": {
               "$ref": "#/definitions/InvalidResponse"
@@ -178,6 +174,92 @@
         "responses": {
           "204": {
             "description": "no content"
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/dailycalPublic": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Daily calories & prohibited food categories",
+        "description": "Daily calories & prohibited food categories",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User data",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/userParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/userParamsResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid status value",
+            "schema": {
+              "$ref": "#/definitions/InvalidResponse"
+            }
+          }
+        }
+      }
+    },
+    "/users/dailycalPrivate": {
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Add summary, return notAllowed category of products, summary",
+        "description": "Add summary, return notAllowed category of products, summary",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "User token",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "String"
+            }
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User data",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "$ref": "#/definitions/userParams"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/userParamsPrivateResponse"
+            }
           },
           "401": {
             "description": "Invalid status value",
@@ -406,6 +488,128 @@
         },
         "_id": {
           "type": "string"
+        }
+      }
+    },
+    "userParams": {
+      "type": "object",
+      "properties": {
+        "currentWeight": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "age": {
+          "type": "number"
+        },
+        "targetWeight": {
+          "type": "number"
+        },
+        "bloodType": {
+          "type": "number"
+        }
+      }
+    },
+    "userParamsResponse": {
+      "type": "object",
+      "properties": {
+        "dayNormCalories": {
+          "type": "number"
+        },
+        "notAllowedCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "userParamsPrivateResponse": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "object",
+          "properties": {
+            "currentWeight": {
+              "type": "number"
+            },
+            "height": {
+              "type": "number"
+            },
+            "age": {
+              "type": "number"
+            },
+            "targetWeight": {
+              "type": "number"
+            },
+            "bloodType": {
+              "type": "number"
+            }
+          }
+        },
+        "notAllowedCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "dayNormCalories": {
+          "type": "number"
+        }
+      }
+    },
+    "getUserResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "type": "object",
+          "properties": {
+            "login": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "_id": {
+              "type": "string"
+            }
+          }
+        },
+        "summary": {
+          "type": "object",
+          "properties": {
+            "currentWeight": {
+              "type": "number"
+            },
+            "height": {
+              "type": "number"
+            },
+            "age": {
+              "type": "number"
+            },
+            "targetWeight": {
+              "type": "number"
+            },
+            "bloodType": {
+              "type": "number"
+            }
+          }
+        },
+        "dayNormCalories": {
+          "type": "number"
+        },
+        "notAllowedCategories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
