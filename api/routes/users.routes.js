@@ -19,7 +19,7 @@ usersRouter.post(
 );
 
 // Daily calories & prohibited food categories
-usersRouter.get(
+usersRouter.post(
   "/dailycal",
   UserController.validateDailyCaloriesParams,
   UserController.dailyCalories
