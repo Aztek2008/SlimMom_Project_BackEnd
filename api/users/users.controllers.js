@@ -202,4 +202,15 @@ static async verifyEmail(req, res, next) {
     }
     next();
   }
+
+  static async getSlim(req, res, next) {
+    try {
+      const {body, user} = req;
+      const userToUpdate = await UserSchema.findByIdUpdateSummary(user._id, body);
+      return res.status(200).json(userToUpdate);
+    }
+    catch (error) {
+      next(error);
+    }
+  }
 };

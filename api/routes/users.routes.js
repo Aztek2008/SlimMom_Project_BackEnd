@@ -21,4 +21,10 @@ usersRouter.post(
 //User Logout
 usersRouter.patch("/logout", UserController.authorize, UserController.logout);
 
+//Add summary, return notAllowed category of products
+usersRouter.patch("/slim",
+  UserController.authorize,
+  UserController.getSlim,
+);
+
 module.exports = usersRouter;
