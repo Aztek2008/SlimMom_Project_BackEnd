@@ -209,6 +209,17 @@ module.exports = class UserController {
     next();
   }
 
+  static async getSlim(req, res, next) {
+    try {
+      const {body, user} = req;
+      const userToUpdate = await UserSchema.findByIdUpdateSummary(user._id, body);
+      return res.status(200).json(userToUpdate);
+    }
+    catch (error) {
+      next(error);
+    }
+  }
+
   static async validateDailyCaloriesParams(req, res, next) {
     const validationSchema = Joi.object({
       currentWeight: Joi.number().required(),
@@ -244,7 +255,8 @@ module.exports = class UserController {
         dayNormCalories: dailyCal,
         notAllowedCategories: prohibitedFoodCategories,
       });
-    } catch (err) {
+    }
+    catch (err) {
       next(err);
     }
   }
