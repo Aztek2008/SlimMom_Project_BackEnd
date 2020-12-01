@@ -5,11 +5,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("../swagger.json");
-
 const productsRouter = require("./routes/products.routes");
 const usersRouter = require("./routes/users.routes");
 const daysRouter = require("./routes/days.routes");
-
 const mongooseOptions = require("./utils/mongooseOptions");
 const errorMiddleware = require("./errors/errorMiddleware");
 
@@ -46,7 +44,6 @@ module.exports = class StartServer {
     this.server.use(morgan("combined"));
     this.server.use(express.static("public"));
     this.server.use(cors());
-    // this.server.use(cors({ origin: `http://localhost:${process.env.PORT}` }));
   }
 
   initErrorMiddleware() {
@@ -68,10 +65,6 @@ module.exports = class StartServer {
   initDayRoutes() {
     this.server.use("/days", daysRouter);
   }
-
-  // initAuthRoutes() {
-  //   this.server.use("/auth", authRouter);
-  // }
 
   async initDataBase() {
     try {

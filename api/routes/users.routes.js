@@ -5,9 +5,6 @@ const usersRouter = Router();
 //User Registration
 usersRouter.post("/register", UserController.validate, UserController.register);
 
-// Email verification
-// usersRouter.get("/verify/:verificationToken", UserController.verifyEmail);
-
 // Get User info
 usersRouter.get("/getuser", UserController.authorize, UserController.getUser);
 
@@ -18,20 +15,20 @@ usersRouter.post(
   UserController.login
 );
 
-// Daily calories & prohibited food categories
-usersRouter.post(
-  "/dailycal",
-  UserController.validateDailyCaloriesParams,
-  UserController.dailyCalories
-);
-
 //User Logout
 usersRouter.patch("/logout", UserController.authorize, UserController.logout);
 
+// Daily calories & prohibited food categories
+usersRouter.patch(
+  "/dailycalPublic",
+  UserController.validateDailyCaloriesParams,
+  UserController.dailyCaloriesPublic
+);
+
 //Add summary, return notAllowed category of products, summary
-usersRouter.patch("/slim",
+usersRouter.patch("/dailycalPrivate",
   UserController.authorize,
-  UserController.getSlim,
+  UserController.dailyCaloriesPrivate,
 );
 
 module.exports = usersRouter;
