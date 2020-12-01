@@ -1,4 +1,3 @@
-const { json } = require("express");
 const Product = require("./products.schema");
 
 const getNotAllowedCategoryProducts = async (groupBlood) => {
@@ -21,9 +20,6 @@ const getNotAllowedCategoryProducts = async (groupBlood) => {
   }
   return await Product.distinct("categories", queryParams);
 };
-
-// const categories = await getNotAllowedCategoryProducts(4);
-// console.log(categories);
 
 module.exports = {
   getNotAllowedCategoryProducts,
