@@ -28,7 +28,7 @@ usersRouter.post(
 //User Logout
 usersRouter.patch("/logout", UserController.authorize, UserController.logout);
 
-//Add summary, return notAllowed category of products
+//Add summary, return notAllowed category of products, summary
 usersRouter.patch("/slim",
   UserController.authorize,
   UserController.getSlim,

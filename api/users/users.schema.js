@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const {getNotAllowedCategoryProducts} = require("../products/products.helpers");
+const {calcDailyCalories} = require("./user.helpers");
 
 const UserSchema = new Schema(
   {
@@ -62,10 +63,11 @@ async function findByIdUpdateSummary(id, summary) {
   return this.findByIdAndUpdate(id,
     {
       summary: {...summary},
-      dayNormCalories: 4000, // Сашину формулу для результата
+      dayNormCalories: calcDailyCalories(summary.currentWeight, summary.height, summary.age, summary.targetWeight),
       notAllowedCategories: [...(await getNotAllowedCategoryProducts(summary.bloodType))]
     },
     {
+      new: true,
       projection: {
         name: true,
         "summary.height": true,
