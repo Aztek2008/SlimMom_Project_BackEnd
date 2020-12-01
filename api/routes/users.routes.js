@@ -18,6 +18,13 @@ usersRouter.post(
   UserController.login
 );
 
+// Daily calories & prohibited food categories
+usersRouter.post(
+  "/dailycal",
+  UserController.validateDailyCaloriesParams,
+  UserController.dailyCalories
+);
+
 //User Logout
 usersRouter.patch("/logout", UserController.authorize, UserController.logout);
 

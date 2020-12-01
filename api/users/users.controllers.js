@@ -7,7 +7,14 @@ const bcryptjs = require("bcryptjs");
 
 const { UnauthorizedError, NotFoundError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
-const { hashPassword, updateToken } = require("./user.helpers");
+const {
+  hashPassword,
+  updateToken,
+  calcDailyCalories,
+} = require("./user.helpers");
+const {
+  getNotAllowedCategoryProducts,
+} = require("../products/products.helpers");
 
 require("dotenv").config();
 
@@ -139,30 +146,29 @@ module.exports = class UserController {
     }
   }
 
-// Verify email
-static async verifyEmail(req, res, next) {
-  try {
-    const { verificationToken } = req.params;
-    const userToVerify = await UserSchema.findByVerificationToken(
-      verificationToken,
-    );
+  // Verify email
+  static async verifyEmail(req, res, next) {
+    try {
+      const { verificationToken } = req.params;
+      const userToVerify = await UserSchema.findByVerificationToken(
+        verificationToken
+      );
 
-    if (!userToVerify) {
-      throw new NotFoundError();
+      if (!userToVerify) {
+        throw new NotFoundError();
+      }
+
+      await UserSchema.verifyUser(userToVerify._id);
+
+      return res
+        .status(200)
+        .sendFile(path.join(__dirname, "../public/index.html"));
+
+      // return res.status(200).send("Your accout is successfully verified");
+    } catch (err) {
+      next(err);
     }
-
-    await UserSchema.verifyUser(userToVerify._id);
-
-   
-    return res
-      .status(200)
-      .sendFile(path.join(__dirname, '../public/index.html'));
-
-    // return res.status(200).send("Your accout is successfully verified");
-  } catch (err) {
-    next(err);
   }
-}
 
   // Get User Info
   static async getUser(req, res, next) {
@@ -178,7 +184,7 @@ static async verifyEmail(req, res, next) {
     } catch (err) {
       next(err);
     }
-  }  
+  }
 
   // logout
   static async logout(req, res, next) {
@@ -211,6 +217,47 @@ static async verifyEmail(req, res, next) {
     }
     catch (error) {
       next(error);
+    }
+  }
+
+  static async validateDailyCaloriesParams(req, res, next) {
+    const validationSchema = Joi.object({
+      currentWeight: Joi.number().required(),
+      height: Joi.number().required(),
+      age: Joi.number().required(),
+      targetWeight: Joi.number().required(),
+      bloodType: Joi.number().required(),
+    });
+    const validationResult = validationSchema.validate(req.body);
+    if (validationResult.error) {
+      return res.status(400).send(validationResult.error.details);
+    }
+    next();
+  }
+
+  static async dailyCalories(req, res, next) {
+    try {
+      const { currentWeight, height, age, targetWeight, bloodType } = req.body;
+
+      const dailyCal = calcDailyCalories(
+        currentWeight,
+        height,
+        age,
+        targetWeight
+      );
+
+      const prohibitedFoodCategories = await getNotAllowedCategoryProducts(
+        bloodType
+      );
+
+      console.log("Here is:", prohibitedFoodCategories);
+      return res.status(200).json({
+        dayNormCalories: dailyCal,
+        notAllowedCategories: prohibitedFoodCategories,
+      });
+    }
+    catch (err) {
+      next(err);
     }
   }
 };
