@@ -5,12 +5,13 @@ const bcryptjs = require("bcryptjs");
 const { UnauthorizedError } = require("../errors/ErrorMessage");
 const UserSchema = require("./users.schema");
 const { hashPassword, calcDailyCalories } = require("./user.helpers");
-const { getNotAllowedCategoryProducts } = require("../products/products.helpers");
+const {
+  getNotAllowedCategoryProducts,
+} = require("../products/products.helpers");
 
 require("dotenv").config();
 
 module.exports = class UserController {
-
   // Registration
   static async register(req, res, next) {
     try {
@@ -152,15 +153,17 @@ module.exports = class UserController {
     }
     next();
   }
-  
+
   //Add summary, return notAllowed category of products, summary
   static async dailyCaloriesPrivate(req, res, next) {
     try {
-      const {body, user} = req;
-      const userToUpdate = await UserSchema.findByIdUpdateSummary(user._id, body);
+      const { body, user } = req;
+      const userToUpdate = await UserSchema.findByIdUpdateSummary(
+        user._id,
+        body
+      );
       return res.status(200).json(userToUpdate);
-    }
-    catch (error) {
+    } catch (error) {
       next(error);
     }
   }
@@ -168,11 +171,11 @@ module.exports = class UserController {
   // Validate calculate data
   static async validateDailyCaloriesParams(req, res, next) {
     const validationSchema = Joi.object({
-      currentWeight: Joi.number().required(),
-      height: Joi.number().required(),
-      age: Joi.number().required(),
-      targetWeight: Joi.number().required(),
-      bloodType: Joi.number().required(),
+      currentWeight: Joi.number().min(25).max(200).required(),
+      height: Joi.number().min(80).max(215).integer().required(),
+      age: Joi.number().min(10).max(125).integer().required(),
+      targetWeight: Joi.number().min(25).max(180).integer().required(),
+      bloodType: Joi.number().min(1).max(4).integer().required(),
     });
     const validationResult = validationSchema.validate(req.body);
     if (validationResult.error) {
@@ -200,8 +203,7 @@ module.exports = class UserController {
         dayNormCalories: dailyCal,
         notAllowedCategories: prohibitedFoodCategories,
       });
-    }
-    catch (err) {
+    } catch (err) {
       next(err);
     }
   }
