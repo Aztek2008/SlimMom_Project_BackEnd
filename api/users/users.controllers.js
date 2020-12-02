@@ -171,10 +171,10 @@ module.exports = class UserController {
   // Validate calculate data
   static async validateDailyCaloriesParams(req, res, next) {
     const validationSchema = Joi.object({
-      currentWeight: Joi.number().min(25).max(200).required(),
-      height: Joi.number().min(80).max(215).integer().required(),
-      age: Joi.number().min(10).max(125).integer().required(),
-      targetWeight: Joi.number().min(25).max(180).integer().required(),
+      currentWeight: Joi.number().min(1).max(300).required(),
+      height: Joi.number().min(10).max(250).integer().required(),
+      age: Joi.number().min(1).max(125).integer().required(),
+      targetWeight: Joi.number().min(1).max(300).integer().required(),
       bloodType: Joi.number().min(1).max(4).integer().required(),
     });
     const validationResult = validationSchema.validate(req.body);
